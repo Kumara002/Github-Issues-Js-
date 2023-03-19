@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github issues</title>
+    <style>
+        body{
+            margin:0;
+            padding:0;
+
+        }
+        li{
+            display: block;
+            margin:auto;
+            border:2px solid black; 
+            margin-bottom: 10px;
+            /* background-color: black; */
+            /* color: whitesmoke;   */
+            /* text-decoration:none; */
+        }
+    </style>
+</head>
+<body>
+    <h1>Page Number <span id="headingNo"></span></h1>
+    <button id="load_next"  onclick="handleLoadNext()">load_next</button>
+    <button id="load_prev" onclick="handleLoadPrev()">load_prev</button>
+    <ul id="orderedList"></ul>
+</body>
+<script>
+    let count = 1
+
+    document.getElementById("headingNo").innerText = count
+    function handleLoadNext() {
+        count = count + 1
+        document.getElementById("headingNo").innerText = count
+        document.getElementById("orderedList").innerHTML = ""
+        fetch(`https://api.github.com/repositories/1296269/issues?page=${count}&per_page=5`)
+            .then((resp) => { return resp.json() })
+            .then((data) => {
+                data.map((value, key) => {
+                    console.log(value)
+                    document.getElementById("orderedList").innerHTML +=
+                        `<li key=${key}>${JSON.stringify(value)}<li>`
+                })
+            })
+            .catch((err) => { console.log(err.message) })
+    }
+    function handleLoadPrev() {
+        count = count - 1
+        if (count == 0) {
+            alert("There is no 0 page")
+            count = 1
+            document.getElementById("headingNo").innerText = count
+        }
+        document.getElementById("headingNo").innerText = count
+        document.getElementById("orderedList").innerHTML = ""
+        fetch(`https://api.github.com/repositories/1296269/issues?page=${count}&per_page=5`)
+            .then((resp) => { return resp.json() })
+            .then((data) => {
+                data.map((value, key) => {
+                    console.log(value)
+                    document.getElementById("orderedList").innerHTML +=
+                        `<li key=${key}>${JSON.stringify(value)}<li>`
+                })
+            })
+            .catch((err) => { console.log(err.message) })
+    }
+
+    fetch(`https://api.github.com/repositories/1296269/issues?page=${count}&per_page=5`)
+        .then((resp) => { return resp.json() })
+        .then((data) => {
+            data.map((value, key) => {
+                console.log(value)
+                document.getElementById("orderedList").innerHTML +=
+                    `<li key=${key}>${JSON.stringify(value)}<li>`
+            })
+        })
+        .catch((err) => { console.log(err.message) })
+</script>
+</html>
